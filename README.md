@@ -14,7 +14,13 @@ Once you have your config ready, open a terminal and run `npm install && npm sta
 
 ## Deploying
 
-Official Docker image coming soon!
+Deploy with Docker by running
+
+`docker run -d --name reactroles -e TOKEN=mytoken -e PREFIX=myprefix puckzxz/reactroles`
+
+To optionally mount the database to the local file system run
+
+`docker run -d --name reactroles -e TOKEN=mytoken -e PREFIX=myprefix -v /my/path:/app/data puckzxz/reactroles`
 
 ## Built with
 * [Discord.js](https://discord.js.org)
