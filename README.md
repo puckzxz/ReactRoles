@@ -1,6 +1,6 @@
 # ReactRoles ![Docker Build](https://img.shields.io/docker/cloud/build/puckzxz/reactroles?style=flat-square) ![GitHub License](https://img.shields.io/github/license/puckzxz/ReactRoles?style=flat-square)
 
-Easily setup Discord reaction roles with this easy to use bot.
+Quicky setup Discord reaction roles with this easy to use bot.
 
 ## Running Locally
 
