@@ -1,5 +1,6 @@
 import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
 import db, { IReaction } from "../../db";
+import { FormatReactionMessage } from "../../util/messages";
 
 interface ICmdArgs {
     msgID: string;
@@ -29,19 +30,22 @@ export default class AddCommand extends Command {
             name: "add",
         });
     }
-    // TODO: Make these replies actually give some valid feedback
     public async run(msg: CommandMessage, args: ICmdArgs) {
         if (args.reactions.length % 2 !== 0) {
-            return msg.say("There must be an equal amount of emojis to roles");
+            return msg.say("[!] There must be an equal amount of emojis to roles");
         }
-        const reactobjs: IReaction[] = [];
-        // TODO: Maybe we can make this faster?
+        const reactObjs: IReaction[] = [];
         // FIXME: Check if the emote and role are in the right order
         while (args.reactions.length > 0) {
             const temp = args.reactions.splice(0, 2);
-            reactobjs.push({ emoji: temp[0], role: temp[1] });
+            reactObjs.push({ emoji: temp[0], role: temp[1] });
         }
-        db.InsertMessage({ id: args.msgID, reactions: reactobjs });
-        return msg.say(`I'll start watching ${args.msgID}`);
+        db.InsertMessage({ id: args.msgID, reactions: reactObjs });
+        const msgToReactTo = await msg.channel.fetchMessage(args.msgID);
+        reactObjs.forEach((x: IReaction) => {
+            msgToReactTo.react(x.emoji);
+        });
+        const entry = FormatReactionMessage(await db.GetMessage(args.msgID));
+        return msg.say(`I added this message...\n${entry}`);
     }
 }

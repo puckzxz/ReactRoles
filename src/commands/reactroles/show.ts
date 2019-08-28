@@ -1,5 +1,6 @@
 import {Command, CommandMessage, CommandoClient} from "discord.js-commando";
 import db, { IReaction, IReactionMessage } from "../../db";
+import { FormatReactionMessages } from "../../util/messages";
 
 export default class ShowCommand extends Command {
     constructor(client: CommandoClient) {
@@ -13,13 +14,9 @@ export default class ShowCommand extends Command {
 
     public async run(msg: CommandMessage) {
         const messages = await db.GetAll();
-        let formatted: string = ">>> ";
-        messages.forEach((x: IReactionMessage) => {
-            formatted += `${x.id}\n`;
-            x.reactions.forEach((y: IReaction) => {
-                formatted += `\t${y.emoji} - ${y.role}\n`;
-            });
-        });
-        return msg.say(`${formatted}`);
+        if (!messages) {
+            return msg.say("No messages in the database!");
+        }
+        return msg.say(`${FormatReactionMessages(messages)}`);
     }
 }

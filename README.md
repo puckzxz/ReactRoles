@@ -22,6 +22,26 @@ To optionally mount the database to the local file system run
 
 `docker run -d --name reactroles -e TOKEN=mytoken -e PREFIX=myprefix -v /my/path:/app/data puckzxz/reactroles`
 
+## Commands
+
+* **add**<br>
+    Adds a message to the database<br>
+    `add <Message ID> <Emoji> <Role>`<br>
+    It can take more than one emoji and role<br>
+    `add <Message ID> <Emoji 1> <Role 1> <Emoji 2> <Role 2>`
+
+* **remove**<br>
+    Removes a message from the database<br>
+    `remove <Message ID>`
+
+* **edit**<br>
+    Replaces the role to be given of an existing message with a new role<br>
+    `edit <Message ID> <MyOldRole> <MyNewRole>`
+
+* **show**<br>
+    Returns a message showing all the messages currently in the database<br>
+    `show`
+
 ## Built with
 * [Discord.js](https://discord.js.org)
 * [Discord.js-commando](https://github.com/discordjs/Commando)
