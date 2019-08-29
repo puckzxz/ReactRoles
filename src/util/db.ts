@@ -52,8 +52,13 @@ class DB {
         return this.db.get("messages").value();
     }
 
-    public ReplaceValueInMessage(ID: string, oldValue: string, newValue: string): void {
-        const oldMessage: IReactionMessage = (this.db as any).get("messages")
+    public ReplaceValueInMessage(
+        ID: string,
+        oldValue: string,
+        newValue: string,
+    ): void {
+        const oldMessage: IReactionMessage = (this.db as any)
+            .get("messages")
             .value()
             .find((x: IReactionMessage) => x.id === ID);
         db.RemoveMessage(oldMessage.id);
@@ -68,7 +73,7 @@ class DB {
     private async init() {
         const adapter = new FileAsync("./data/db.json");
         this.db = await lowdb(adapter);
-        this.db.defaults({messages: []}).write();
+        this.db.defaults({ messages: [] }).write();
     }
 }
 

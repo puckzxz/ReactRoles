@@ -2,11 +2,13 @@ import chalk from "chalk";
 import { Emoji, MessageReaction } from "discord.js";
 import { CommandoClient } from "discord.js-commando";
 import path from "path";
-import db, { IReaction, IReactionMessage } from "./db";
+import db, { IReaction, IReactionMessage } from "./util/db";
 
 const client = new CommandoClient({
-    commandPrefix: process.env.PREFIX ? process.env.PREFIX : require("./config").PREFIX,
-    owner: "135554522616561664",
+    commandPrefix: process.env.PREFIX
+        ? process.env.PREFIX
+        : require("./config").PREFIX,
+    owner: "135554522616561664", // puckzxz#2080
     unknownCommandResponse: false,
 });
 
@@ -20,9 +22,7 @@ client
     .on("ready", () => {
         console.log(
             chalk.green(
-                `Client logged in as ${client.user.username}#${
-                    client.user.discriminator
-                } - ${client.user.id}`,
+                `Client logged in as ${client.user.username}#${client.user.discriminator} - ${client.user.id}`,
             ),
         );
     })
@@ -32,6 +32,11 @@ client
     .on("reconnecting", () => {
         console.log(chalk.yellow("Client attempting to reconnect..."));
     });
+
+client.registry
+    .registerGroup("reactroles", "ReactRoles")
+    .registerDefaults()
+    .registerCommandsIn(path.join(__dirname, "commands"));
 
 const events: any = {
     MESSAGE_REACTION_ADD: "messageReactionAdd",
@@ -59,10 +64,7 @@ client.on("raw", async (event: any) => {
     let reaction = message.reactions.get(emojiKey);
 
     if (!reaction) {
-        const emoji = new Emoji(
-            client.guilds.get(data.guild_id)!,
-            data.emoji,
-        );
+        const emoji = new Emoji(client.guilds.get(data.guild_id)!, data.emoji);
         reaction = new MessageReaction(
             message,
             emoji,
@@ -117,9 +119,6 @@ client.on("messageReactionRemove", async (reaction, user) => {
     }
 });
 
-client.registry
-    .registerGroup("reactroles", "ReactRoles")
-    .registerDefaults()
-    .registerCommandsIn(path.join(__dirname, "commands"));
-
-process.env.TOKEN ? client.login(process.env.TOKEN) : client.login(require("./config").TOKEN);
+process.env.TOKEN
+    ? client.login(process.env.TOKEN)
+    : client.login(require("./config").TOKEN);

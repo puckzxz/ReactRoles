@@ -1,4 +1,4 @@
-import { IReaction, IReactionMessage } from "../db";
+import { IReaction, IReactionMessage } from "./db";
 
 /**
  *

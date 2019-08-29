@@ -2,7 +2,7 @@
   "name": "reactroles",
   "version": "1.0.0",
   "description": "Discord bot that gives roles based on reactions",
-  "main": "src/bot.js",
+  "main": "src/bot.ts",
   "scripts": {
     "start": "tsc && node dist/bot.js"
   },

@@ -1,5 +1,5 @@
-import {Command, CommandMessage, CommandoClient} from "discord.js-commando";
-import db from "../../db";
+import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
+import db from "../../util/db";
 
 interface ICmdArgs {
     msgID: string;
