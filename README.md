@@ -2,7 +2,7 @@
 
 Quicky setup Discord reaction roles with this easy to use bot.
 
-## Running Locally
+## 🖥 Running Locally
 
 Ensure you have both [Node](https://nodejs.org) and [TypeScript](https://www.typescriptlang.org/index.html) installed
 
@@ -12,9 +12,9 @@ Take a look at [`src/config.template.ts`](src/config.template.ts) for the variab
 
 Once you have your config ready, open a terminal and run `npm install && npm start`
 
-## Deploying
+## 🐳 Deploying with Docker
 
-Deploy with Docker by running
+Deploy by running
 
 `docker run -d --name reactroles -e TOKEN=mytoken -e PREFIX=myprefix puckzxz/reactroles`
 
@@ -22,11 +22,11 @@ To optionally mount the database to the local file system run
 
 `docker run -d --name reactroles -e TOKEN=mytoken -e PREFIX=myprefix -v /my/path:/app/data puckzxz/reactroles`
 
-## Commands
+## 🧠 Commands
 
 * **add**<br>
     Adds a message to the database<br>
-    `add <Message ID> <Emoji> <Role>`<br>
+    `add <Channel ID> <Message ID> <Emoji> <Role>`<br>
     It can take more than one emoji and role<br>
     `add <Message ID> <Emoji 1> <Role 1> <Emoji 2> <Role 2>`
 
@@ -42,9 +42,9 @@ To optionally mount the database to the local file system run
     Returns a message showing all the messages currently in the database<br>
     `show`
 
-## Built with
+## 🏗 Built with
 * [Discord.js](https://discord.js.org)
 * [Discord.js-commando](https://github.com/discordjs/Commando)
 
-## License
+## 📜 License
 See [UNLICENSE](UNLICENSE) for more details
