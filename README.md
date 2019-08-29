@@ -28,7 +28,7 @@ To optionally mount the database to the local file system run
     Adds a message to the database<br>
     `add <Channel ID> <Message ID> <Emoji> <Role>`<br>
     It can take more than one emoji and role<br>
-    `add <Message ID> <Emoji 1> <Role 1> <Emoji 2> <Role 2>`
+    `add <Channel ID> <Message ID> <Emoji 1> <Role 1> <Emoji 2> <Role 2>`
 
 * **remove**<br>
     Removes a message from the database<br>
