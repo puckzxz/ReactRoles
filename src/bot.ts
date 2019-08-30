@@ -78,6 +78,9 @@ client.on("raw", async (event: any) => {
 
 client.on("messageReactionAdd", async (reaction, user) => {
     const guildUser = reaction.message.guild.member(user);
+    if (guildUser.id === client.user.id) {
+        return;
+    }
     const reactObj: IReactionMessage = await db.GetMessage(reaction.message.id);
     if (!reactObj) {
         return;
@@ -101,6 +104,9 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
 client.on("messageReactionRemove", async (reaction, user) => {
     const guildUser = reaction.message.guild.member(user);
+    if (guildUser.id === client.user.id) {
+        return;
+    }
     const reactObj: IReactionMessage = await db.GetMessage(reaction.message.id);
     const reactRole = reactObj.reactions.find(
         (x: IReaction) => x.emoji === reaction.emoji.name,
