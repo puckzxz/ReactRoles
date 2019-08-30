@@ -33,6 +33,8 @@ export default class EditCommand extends Command {
             group: "reactroles",
             memberName: "edit",
             name: "edit",
+            // @ts-ignore Needed because typings are outdated.
+            userPermissions: ["ADMINISTRATOR"],
         });
     }
     public async run(msg: CommandMessage, args: ICmdArgs) {

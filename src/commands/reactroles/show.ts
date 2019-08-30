@@ -6,16 +6,18 @@ export default class ShowCommand extends Command {
     constructor(client: CommandoClient) {
         super(client, {
             description:
-                "Retuns all messages in the database that are currently being watched",
+                "Returns all messages in the database that are currently being watched",
             group: "reactroles",
             memberName: "show",
             name: "show",
+            // @ts-ignore Needed because typings are outdated.
+            userPermissions: ["ADMINISTRATOR"],
         });
     }
 
     public async run(msg: CommandMessage) {
         const messages = await db.GetAll();
-        if (!messages) {
+        if (messages.length === 0) {
             return msg.say("No messages in the database!");
         }
         return msg.say(`${FormatReactionMessages(messages)}`);

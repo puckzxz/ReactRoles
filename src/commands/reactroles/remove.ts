@@ -19,6 +19,8 @@ export default class RemoveCommand extends Command {
             group: "reactroles",
             memberName: "remove",
             name: "remove",
+            // @ts-ignore Needed because typings are outdated.
+            userPermissions: ["ADMINISTRATOR"],
         });
     }
 

@@ -39,6 +39,8 @@ export default class AddCommand extends Command {
             group: "reactroles",
             memberName: "add",
             name: "add",
+            // @ts-ignore Needed because typings are outdated.
+            userPermissions: ["ADMINISTRATOR"],
         });
     }
     public async run(msg: CommandMessage, args: ICmdArgs) {
