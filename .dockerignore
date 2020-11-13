@@ -2,9 +2,6 @@
 .idea
 .vscode
 data
-dist
-node_modules
 .gitignore
-.prettierrc
 README.md
-tslint.json
+UNLICENSE
