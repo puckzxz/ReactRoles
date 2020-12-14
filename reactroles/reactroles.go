@@ -17,8 +17,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const BOW_MESSAGE_BUCKET = "messages"
+const bowMessageBucket = "messages"
 
+// ReactRoles contains data needed for ReactRoles to work
 type ReactRoles struct {
 	c      *disgord.Client
 	db     *bow.DB
@@ -26,6 +27,7 @@ type ReactRoles struct {
 	log    *logrus.Logger
 }
 
+// New returns a new instance of ReactRoles
 func New(cfg *config.Config) (*ReactRoles, error) {
 	var log = &logrus.Logger{
 		Out:       os.Stderr,
@@ -64,6 +66,7 @@ func New(cfg *config.Config) (*ReactRoles, error) {
 	}, nil
 }
 
+// Start starts ReactRoles
 func (r *ReactRoles) Start() error {
 	err := func() error {
 		return r.c.Gateway().StayConnectedUntilInterrupted()
@@ -144,12 +147,13 @@ func (r *ReactRoles) onReactAdd(sess disgord.Session, evt *disgord.MessageReacti
 
 	msg := &models.Message{}
 
-	err = r.db.Bucket(BOW_MESSAGE_BUCKET).Get(evt.MessageID.String(), msg)
+	err = r.db.Bucket(bowMessageBucket).Get(evt.MessageID.String(), msg)
 
 	if err == bow.ErrNotFound {
 		return
 	} else if err != nil {
 		r.log.WithError(err).Errorln("Failed to retrieve message")
+		return
 	}
 
 	for _, x := range msg.Reactions {
@@ -186,12 +190,13 @@ func (r *ReactRoles) onReactRemove(sess disgord.Session, evt *disgord.MessageRea
 
 	msg := &models.Message{}
 
-	err = r.db.Bucket(BOW_MESSAGE_BUCKET).Get(evt.MessageID.String(), msg)
+	err = r.db.Bucket(bowMessageBucket).Get(evt.MessageID.String(), msg)
 
 	if err == bow.ErrNotFound {
 		return
 	} else if err != nil {
 		r.log.WithError(err).Errorln("Failed to retrieve message")
+		return
 	}
 
 	for _, x := range msg.Reactions {
@@ -231,7 +236,7 @@ func (r *ReactRoles) addCommand(sess *disgord.Session, msg *disgord.Message) {
 
 	rawChannel := args[0]
 
-	channelId, err := strconv.ParseUint(rawChannel[2:len(rawChannel)-1], 10, 64)
+	channelID, err := strconv.ParseUint(rawChannel[2:len(rawChannel)-1], 10, 64)
 
 	if err != nil {
 		if _, err := msg.Reply(context.Background(), *sess, "Failed to parse channel ID"); err != nil {
@@ -240,7 +245,7 @@ func (r *ReactRoles) addCommand(sess *disgord.Session, msg *disgord.Message) {
 		return
 	}
 
-	if ok := snowflake.NewSnowflake(channelId).Valid(); !ok {
+	if ok := snowflake.NewSnowflake(channelID).Valid(); !ok {
 		if _, err := msg.Reply(context.Background(), *sess, "Channel ID was not a valid snowflake"); err != nil {
 			r.log.WithError(err).Errorln("Failed to send message")
 		}
@@ -256,9 +261,9 @@ func (r *ReactRoles) addCommand(sess *disgord.Session, msg *disgord.Message) {
 		return
 	}
 
-	messageId := snowflake.NewSnowflake(rawMessage)
+	messageID := snowflake.NewSnowflake(rawMessage)
 
-	if !messageId.Valid() {
+	if !messageID.Valid() {
 		if _, err := msg.Reply(context.Background(), *sess, "Message ID was not a valid snowflake"); err != nil {
 			r.log.WithError(err).Errorln("Failed to send message")
 		}
@@ -275,7 +280,7 @@ func (r *ReactRoles) addCommand(sess *disgord.Session, msg *disgord.Message) {
 	}
 
 	message := &models.Message{
-		MessageID: messageId.String(),
+		MessageID: messageID.String(),
 		GuildID:   uint64(msg.GuildID),
 	}
 
@@ -291,12 +296,13 @@ func (r *ReactRoles) addCommand(sess *disgord.Session, msg *disgord.Message) {
 
 	message.Reactions = reactions
 
-	if err = r.db.Bucket(BOW_MESSAGE_BUCKET).Put(message); err != nil {
+	if err = r.db.Bucket(bowMessageBucket).Put(message); err != nil {
 		r.log.WithError(err).Errorln("Failed to insert message")
+		return
 	}
 
 	for _, react := range message.Reactions {
-		err := r.c.Channel(snowflake.NewSnowflake(channelId)).Message(messageId).Reaction(react.Emoji).Create()
+		err := r.c.Channel(snowflake.NewSnowflake(channelID)).Message(messageID).Reaction(react.Emoji).Create()
 		if err != nil {
 			r.log.WithError(err).Errorln("Failed to react to message")
 		}
@@ -304,7 +310,7 @@ func (r *ReactRoles) addCommand(sess *disgord.Session, msg *disgord.Message) {
 }
 
 func (r *ReactRoles) removeCommand(sess *disgord.Session, msg *disgord.Message) {
-	if err := r.db.Bucket(BOW_MESSAGE_BUCKET).Delete(msg.Content); err != nil {
+	if err := r.db.Bucket(bowMessageBucket).Delete(msg.Content); err != nil {
 		r.log.WithError(err).Errorln("Failed to delete message from database")
 	}
 }
@@ -314,7 +320,7 @@ func (r *ReactRoles) showCommand(sess *disgord.Session, msg *disgord.Message) {
 
 	m := &models.Message{}
 
-	iter := r.db.Bucket(BOW_MESSAGE_BUCKET).Iter()
+	iter := r.db.Bucket(bowMessageBucket).Iter()
 
 	defer iter.Close()
 
