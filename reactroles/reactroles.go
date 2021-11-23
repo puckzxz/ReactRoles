@@ -43,7 +43,7 @@ func New(cfg *config.Config) (*ReactRoles, error) {
 		RejectEvents: []string{
 			disgord.EvtTypingStart,
 
-			//Requires privledged intents
+			//Requires privileged intents
 			disgord.EvtPresenceUpdate,
 			disgord.EvtGuildMemberAdd,
 			disgord.EvtGuildMemberUpdate,
